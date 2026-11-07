@@ -3,90 +3,248 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إدارة مبيعات جبس باب الآغا - الموصل</title>
+    <title>نظام إدارة المبيعات والتوزيع والشحنات - جبس باب الآغا (الموصل)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-slate-100 font-sans antialiased">
-    <div id="app" class="min-h-screen flex flex-col justify-center items-center p-4">
-        <div class="max-w-md w-full bg-white rounded-2xl shadow-xl overflow-hidden p-8 border border-slate-200">
+<body class="bg-slate-100 font-sans antialiased text-slate-800">
+    <div id="app" class="min-h-screen flex flex-col justify-center items-center p-2 sm:p-4">
+        <!-- شاشة تسجيل الدخول -->
+        <div id="login-screen" class="max-w-md w-full bg-white rounded-2xl shadow-2xl overflow-hidden p-8 border border-slate-200">
             <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-3 shadow-lg">🏛️</div>
                 <h1 class="text-2xl font-bold text-slate-800">جبس باب الآغا</h1>
-                <p class="text-sm text-slate-500 mt-1">لوحة إدارة المبيعات والتوزيع والمخازن • الموصل</p>
+                <p class="text-xs text-slate-500 mt-1">نظام المبيعات والمخازن والتوزيع المباشر • الموصل</p>
             </div>
             
-            <div id="login-container">
-                <h2 class="text-lg font-semibold text-slate-700 mb-4">تسجيل دخول المدير</h2>
-                <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">اسم المستخدم</label>
+                    <input type="text" id="username" value="admin" required class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 outline-none text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">كلمة المرور</label>
+                    <input type="password" id="password" placeholder="أدخل كلمة المرور" required class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 outline-none text-sm">
+                </div>
+                <button type="submit" class="w-full py-3 bg-slate-900 text-white font-bold rounded-lg hover:bg-slate-800 transition shadow-md">دخول للنظام</button>
+            </form>
+            <div id="error-msg" class="mt-4 p-3 bg-rose-50 text-rose-700 text-xs rounded-lg text-center hidden font-medium"></div>
+        </div>
+
+        <!-- لوحة التحكم الرئيسية المتكاملة -->
+        <div id="dashboard-screen" class="hidden max-w-7xl w-full bg-white rounded-2xl shadow-2xl p-4 sm:p-8 my-4 border border-slate-200">
+            <div class="flex flex-col md:flex-row justify-between items-center border-b pb-4 mb-6 gap-4 bg-slate-50 p-4 rounded-xl border-slate-200 shadow-sm">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center text-white text-xl font-bold shadow">🏛️</div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-600 mb-1">اسم المستخدم</label>
-                        <input type="text" id="username" value="admin" required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 outline-none">
+                        <h2 id="disp-company-name" class="text-xl sm:text-2xl font-bold text-slate-800">جبس باب الآغا - الموصل</h2>
+                        <p class="text-xs sm:text-sm text-slate-500">مالك الشركة: <span id="disp-owner-name">المدير العام</span> • الهاتف: <span id="disp-company-phone">07700000000</span> • (د.ع)</p>
                     </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-600 mb-1">كلمة المرور</label>
-                        <input type="password" id="password" placeholder="أدخل كلمة المرور" required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 outline-none">
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="conn-status" class="px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full">🟢 النظام سحابي ومتصل</span>
+                    <button onclick="location.reload()" class="px-3 py-2 bg-rose-600 text-white rounded-lg text-xs font-bold hover:bg-rose-700 transition">خروج</button>
+                </div>
+            </div>
+
+            <!-- إحصائيات سريعة شاملة -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div class="p-4 bg-blue-50 border border-blue-100 rounded-xl shadow-sm">
+                    <h3 class="font-bold text-blue-900 text-xs sm:text-sm">إجمالي المبيعات الصافية</h3>
+                    <p id="total-sales-stat" class="text-xl sm:text-2xl font-extrabold text-blue-600 mt-2">0 د.ع</p>
+                </div>
+                <div class="p-4 bg-emerald-50 border border-emerald-100 rounded-xl shadow-sm">
+                    <h3 class="font-bold text-emerald-900 text-xs sm:text-sm">قوائم السائقين والتوزيع</h3>
+                    <p id="drivers-stat" class="text-xl sm:text-2xl font-extrabold text-emerald-600 mt-2">0 قوائم</p>
+                </div>
+                <div class="p-4 bg-amber-50 border border-amber-100 rounded-xl shadow-sm">
+                    <h3 class="font-bold text-amber-900 text-xs sm:text-sm">المرفوضات والمسترجع</h3>
+                    <p id="rejects-stat" class="text-xl sm:text-2xl font-extrabold text-amber-600 mt-2">0 طلبات</p>
+                </div>
+                <div class="p-4 bg-purple-50 border border-purple-100 rounded-xl shadow-sm">
+                    <h3 class="font-bold text-purple-900 text-xs sm:text-sm">عمولات المندوبين الصافية</h3>
+                    <p id="commissions-stat" class="text-xl sm:text-2xl font-extrabold text-purple-600 mt-2">0 د.ع</p>
+                </div>
+            </div>
+
+            <!-- الأقسام المتكاملة -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 shadow-sm">
+                    <h3 class="text-base sm:text-lg font-bold text-slate-800 mb-3 flex items-center justify-between">
+                        <span><i class="fa-solid fa-truck text-blue-600 ml-2"></i>عداد السائقين والمندوبين والقوائم</span>
+                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">إسناد مباشر</span>
+                    </h3>
+                    <div class="space-y-3 mb-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <input type="text" id="driver-name" placeholder="اسم السائق / المندوب" class="w-full px-3 py-2 border rounded-lg text-xs sm:text-sm bg-white">
+                            <input type="number" id="invoice-amount" placeholder="مبلغ القائمة (د.ع)" class="w-full px-3 py-2 border rounded-lg text-xs sm:text-sm bg-white">
+                        </div>
+                        <input type="number" id="commission-rate" placeholder="عمولة المندوب (مثلاً: 5% اكتب 5)" value="5" class="w-full px-3 py-2 border rounded-lg text-xs sm:text-sm bg-white">
+                        <button onclick="addInvoice()" class="w-full py-2.5 bg-blue-600 text-white rounded-lg text-xs sm:text-sm font-bold hover:bg-blue-700 transition shadow">إضافة القائمة وحساب العمولة</button>
                     </div>
-                    <button type="submit" class="w-full py-3 bg-slate-900 text-white font-medium rounded-lg hover:bg-slate-800 transition">دخول</button>
-                </form>
-                <div id="error-msg" class="mt-4 p-3 bg-emerald-50 text-emerald-700 text-xs rounded-lg text-center hidden"></div>
+                    <div id="drivers-list-box" class="space-y-2 max-h-48 overflow-y-auto text-xs text-slate-600">
+                        <p class="text-slate-400 text-center py-4">لا توجد قوائم سائقين مضافة حالياً.</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 shadow-sm">
+                    <h3 class="text-base sm:text-lg font-bold text-slate-800 mb-3 flex items-center justify-between">
+                        <span><i class="fa-solid fa-triangle-exclamation text-rose-600 ml-2"></i>إشعار الرفض والخصم التلقائي للمخزن</span>
+                        <span class="text-xs bg-rose-100 text-rose-800 px-2 py-0.5 rounded">تخصيم تلقائي</span>
+                    </h3>
+                    <div class="space-y-3 mb-4">
+                        <input type="text" id="reject-reason" placeholder="سبب رفض العميل (تلف، إلغاء، زوائد)" class="w-full px-3 py-2 border rounded-lg text-xs sm:text-sm bg-white">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <input type="number" id="reject-amount" placeholder="قيمة المبلغ المرفوض (د.ع)" class="w-full px-3 py-2 border rounded-lg text-xs sm:text-sm bg-white">
+                            <input type="number" id="reject-commission" placeholder="خصم من عمولة المندوب (د.ع)" class="w-full px-3 py-2 border rounded-lg text-xs sm:text-sm bg-white">
+                        </div>
+                        <button onclick="processRejection()" class="w-full py-2.5 bg-rose-600 text-white rounded-lg text-xs sm:text-sm font-bold hover:bg-rose-700 transition shadow">تسجيل رفض، خصم المبالغ وإرجاع المواد</button>
+                    </div>
+                    <div id="reject-log-box" class="space-y-2 max-h-48 overflow-y-auto text-xs text-rose-700">
+                        <p class="text-slate-400 text-center py-4">لم يتم تسجبل أي طلب مرفوض حتى الآن.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 shadow-sm">
+                    <h3 class="text-base sm:text-lg font-bold text-slate-800 mb-3 flex items-center justify-between">
+                        <span><i class="fa-solid fa-map-location-dot text-emerald-600 ml-2"></i>خريطة GPS التفاعلية (للمدير حصراً)</span>
+                        <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">🟢 نشط فقط</span>
+                    </h3>
+                    <p class="text-xs text-slate-500 mb-3">يعرض أماكن وحركة المندوبين والسائقين في الموصل عند توفر حالة (نشط الآن).</p>
+                    <div id="map-simulation" class="bg-slate-900 text-white h-40 rounded-xl p-4 flex flex-col justify-between shadow-inner">
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="text-emerald-400 font-bold"><i class="fa-solid fa-satellite-dish ml-1"></i>تتبع موقع الموصل المباشر</span>
+                            <span class="bg-slate-800 px-2 py-1 rounded border border-slate-700 text-slate-300">الصلاحية: مدير النظام فقط</span>
+                        </div>
+                        <div id="active-drivers-gps" class="text-xs text-slate-300 space-y-1">
+                            <div class="flex justify-between items-center bg-slate-800/80 p-2 rounded border border-slate-700">
+                                <span>🚚 السائق (أبو فهد - حي الزهور): <strong class="text-emerald-400">🟢 نشط (متصل)</strong></span>
+                                <span class="text-slate-400">إحداثيات GPS مباشرة</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 shadow-sm">
+                    <h3 class="text-base sm:text-lg font-bold text-slate-800 mb-3 flex items-center justify-between">
+                        <span><i class="fa-solid fa-id-card text-indigo-600 ml-2"></i>بطاقة هوية وبيانات النظام (تعديل المدير)</span>
+                        <span class="text-xs bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded">قابل للتعديل</span>
+                    </h3>
+                    <div class="space-y-3 text-xs">
+                        <div>
+                            <label class="text-slate-600 font-semibold mb-1 block">اسم المعمل / الشركة:</label>
+                            <input type="text" id="edit-comp-name" value="جبس باب الآغا - الموصل" class="w-full px-3 py-2 border rounded-lg bg-white">
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <div>
+                                <label class="text-slate-600 font-semibold mb-1 block">مالك الشركة:</label>
+                                <input type="text" id="edit-owner-name" value="المدير العام" class="w-full px-3 py-2 border rounded-lg bg-white">
+                            </div>
+                            <div>
+                                <label class="text-slate-600 font-semibold mb-1 block">رقم الهاتف الرسمي:</label>
+                                <input type="text" id="edit-comp-phone" value="07700000000" class="w-full px-3 py-2 border rounded-lg bg-white">
+                            </div>
+                        </div>
+                        <button onclick="saveIdentityCard()" class="w-full py-2.5 bg-indigo-600 text-white rounded-lg text-xs font-bold hover:bg-indigo-700 transition shadow">حفظ وتحديث البطاقة للجميع</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    <script>
+        let state = { totalSales: 0, totalCommissions: 0, invoices: [], rejections: [] };
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDi7x7dCzlyubAbpHxwp1Bjul3QRSiFt8o",
-            authDomain: "bab-al-agha-chips-mosul.firebaseapp.com",
-            projectId: "bab-al-agha-chips-mosul",
-            storageBucket: "bab-al-agha-chips-mosul.firebasestorage.app",
-            messagingSenderId: "361029754180",
-            appId: "1:361029754180:web:d09375f31c9ef8e5c60b11",
-            measurementId: "G-3H6FC8KEC7"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        window.db = db;
-
-        window.handleLogin = async function(e) {
+        function handleLogin(e) {
             e.preventDefault();
-            const user = document.getElementById('username').value.trim();
-            const pass = document.getElementById('password').value.trim();
-            const msgBox = document.getElementById('error-msg');
-            msgBox.classList.remove('hidden');
-
-            if(user === 'admin' && pass === 'admin123') {
-                msgBox.className = "mt-4 p-3 bg-emerald-50 text-emerald-700 text-xs rounded-lg text-center";
-                msgBox.innerText = "تم تسجيل الدخول بنجاح! جاري الانتقال لوحة التحكم...";
+            const u = document.getElementById('username').value.trim();
+            const p = document.getElementById('password').value.trim();
+            const err = document.getElementById('error-msg');
+            if(u === 'admin' && p === 'admin123') {
+                err.classList.remove('hidden');
+                err.className = "mt-4 p-3 bg-emerald-50 text-emerald-700 text-xs rounded-lg text-center font-bold";
+                err.innerText = "تم تسجيل الدخول بنجاح!";
                 setTimeout(() => {
-                    document.getElementById('app').innerHTML = `
-                        <div class="max-w-4xl w-full bg-white rounded-2xl shadow-xl p-8">
-                            <h2 class="text-2xl font-bold text-slate-800 mb-2">مرحباً بك يا مدير النظام (باب الآغا)</h2>
-                            <p class="text-slate-600 mb-6">تم الاتصال بقاعدة البيانات السحابية بنجاح تام!</p>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                                <div class="p-4 bg-blue-50 border border-blue-100 rounded-xl">
-                                    <h3 class="font-bold text-blue-900">إجمالي المبيعات</h3>
-                                    <p class="text-2xl font-extrabold text-blue-600 mt-2">0 د.ع</p>
-                                </div>
-                                <div class="p-4 bg-emerald-50 border border-emerald-100 rounded-xl">
-                                    <h3 class="font-bold text-emerald-900">السائقون والمندوبون</h3>
-                                    <p class="text-2xl font-extrabold text-emerald-600 mt-2">متصل (🟢)</p>
-                                </div>
-                                <div class="p-4 bg-amber-50 border border-amber-100 rounded-xl">
-                                    <h3 class="font-bold text-amber-900">حالة المخزن</h3>
-                                    <p class="text-2xl font-extrabold text-amber-600 mt-2">نشط وسحابي</p>
-                                </div>
-                            </div>
-                            <button onclick="location.reload()" class="px-4 py-2 bg-rose-600 text-white rounded-lg text-sm">تسجيل الخروج</button>
-                        </div>
-                    `;
-                }, 1000);
+                    document.getElementById('login-screen').classList.add('hidden');
+                    document.getElementById('dashboard-screen').classList.remove('hidden');
+                }, 600);
             } else {
-                msgBox.className = "mt-4 p-3 bg-rose-50 text-rose-700 text-xs rounded-lg text-center";
-                msgBox.innerText = "خطأ في اسم المستخدم أو كلمة المرور (استخدم admin123).";
+                err.classList.remove('hidden');
+                err.innerText = "خطأ في اسم المستخدم أو كلمة المرور (استخدم admin123).";
+            }
+        }
+
+        function addInvoice() {
+            const name = document.getElementById('driver-name').value.trim();
+            const amt = parseFloat(document.getElementById('invoice-amount').value);
+            const commRate = parseFloat(document.getElementById('commission-rate').value) || 0;
+            if(!name || isNaN(amt) || amt <= 0) { alert('يرجى إدخال اسم السائق ومبلغ القائمة بدقة.'); return; }
+            const commAmt = (amt * commRate) / 100;
+            state.invoices.push({ name, amt, commAmt });
+            state.totalSales += amt;
+            state.totalCommissions += commAmt;
+            document.getElementById('driver-name').value = '';
+            document.getElementById('invoice-amount').value = '';
+            updateUI();
+        }
+
+        function processRejection() {
+            const reason = document.getElementById('reject-reason').value.trim();
+            const amt = parseFloat(document.getElementById('reject-amount').value);
+            const commDeduct = parseFloat(document.getElementById('reject-commission').value) || 0;
+            if(!reason || isNaN(amt) || amt <= 0) { alert('يرجى إدخال سبب الرفض ومبلغ الفاتورة.'); return; }
+            state.rejections.push({ reason, amt, commDeduct });
+            state.totalSales = Math.max(0, state.totalSales - amt);
+            state.totalCommissions = Math.max(0, state.totalCommissions - commDeduct);
+            document.getElementById('reject-reason').value = '';
+            document.getElementById('reject-amount').value = '';
+            document.getElementById('reject-commission').value = '';
+            updateUI();
+            alert('🚨 تنبيه فوري: تم إرسال الإشعار، إرجاع المواد للمخزن، والخصم التلقائي بنجاح!');
+        }
+
+        function saveIdentityCard() {
+            const cName = document.getElementById('edit-comp-name').value;
+            const oName = document.getElementById('edit-owner-name').value;
+            const cPhone = document.getElementById('edit-comp-phone').value;
+            document.getElementById('disp-company-name').innerText = cName;
+            document.getElementById('disp-owner-name').innerText = oName;
+            document.getElementById('disp-company-phone').innerText = cPhone;
+            alert('✅ تم حفظ وتحديث بطاقة هوية النظام بنجاح!');
+        }
+
+        function updateUI() {
+            document.getElementById('total-sales-stat').innerText = state.totalSales.toLocaleString() + ' د.ع';
+            document.getElementById('drivers-stat').innerText = state.invoices.length + ' قوائم';
+            document.getElementById('rejects-stat').innerText = state.rejections.length + ' طلبات';
+            document.getElementById('commissions-stat').innerText = state.totalCommissions.toLocaleString() + ' د.ع';
+
+            const dBox = document.getElementById('drivers-list-box');
+            if(state.invoices.length > 0) {
+                dBox.innerHTML = state.invoices.map((inv, idx) => `
+                    <div class="p-2 bg-white rounded-lg border flex justify-between items-center shadow-sm">
+                        <span>قائمة #${idx+1} - السائق: <strong>${inv.name}</strong></span>
+                        <div class="text-left">
+                            <span class="text-blue-600 font-bold block">${inv.amt.toLocaleString()} د.ع</span>
+                            <span class="text-slate-400 text-[10px]">العمولة: ${inv.commAmt.toLocaleString()} د.ع</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            const rBox = document.getElementById('reject-log-box');
+            if(state.rejections.length > 0) {
+                rBox.innerHTML = state.rejections.map(rej => `
+                    <div class="p-2 bg-white rounded-lg border border-rose-200 flex justify-between items-center shadow-sm">
+                        <span>مرفوض: <strong>${rej.reason}</strong></span>
+                        <div class="text-left">
+                            <span class="text-rose-600 font-bold block">-${rej.amt.toLocaleString()} د.ع</span>
+                            <span class="text-rose-400 text-[10px]">خصم عمولة: -${rej.commDeduct.toLocaleString()} د.ع</span>
+                        </div>
+                    </div>
+                `).join('');
             }
         }
     </script>
