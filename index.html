@@ -14,7 +14,7 @@
             <div class="text-center mb-6">
                 <div class="w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-3 shadow-lg">🏛️</div>
                 <h1 class="text-2xl font-bold text-slate-800">جبس باب الآغا</h1>
-                <p class="text-xs text-slate-500 mt-1">نظام المبيعات والمخازن والتوزيع المباشر • الموصل</p>
+                <p class="text-xs text-slate-500 mt-1">نظام المبيعات والمخازن والتوزيع • الموصل</p>
             </div>
             
             <form onsubmit="handleLogin(event)" class="space-y-4">
@@ -33,6 +33,7 @@
 
         <!-- لوحة التحكم الرئيسية المتكاملة -->
         <div id="dashboard-screen" class="hidden max-w-7xl w-full bg-white rounded-2xl shadow-2xl p-4 sm:p-8 my-4 border border-slate-200">
+            <!-- الهوية العلوية والبطاقة الترحيبية -->
             <div class="flex flex-col md:flex-row justify-between items-center border-b pb-4 mb-6 gap-4 bg-slate-50 p-4 rounded-xl border-slate-200 shadow-sm">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center text-white text-xl font-bold shadow">🏛️</div>
@@ -54,100 +55,113 @@
                     <p id="total-sales-stat" class="text-xl sm:text-2xl font-extrabold text-blue-600 mt-2">0 د.ع</p>
                 </div>
                 <div class="p-4 bg-emerald-50 border border-emerald-100 rounded-xl shadow-sm">
-                    <h3 class="font-bold text-emerald-900 text-xs sm:text-sm">قوائم السائقين والتوزيع</h3>
-                    <p id="drivers-stat" class="text-xl sm:text-2xl font-extrabold text-emerald-600 mt-2">0 قوائم</p>
+                    <h3 class="font-bold text-emerald-900 text-xs sm:text-sm">طاقم العمل (سائقين ومندوبين)</h3>
+                    <p id="staff-stat" class="text-xl sm:text-2xl font-extrabold text-emerald-600 mt-2">0 أشخاص</p>
                 </div>
                 <div class="p-4 bg-amber-50 border border-amber-100 rounded-xl shadow-sm">
                     <h3 class="font-bold text-amber-900 text-xs sm:text-sm">المرفوضات والمسترجع</h3>
                     <p id="rejects-stat" class="text-xl sm:text-2xl font-extrabold text-amber-600 mt-2">0 طلبات</p>
                 </div>
                 <div class="p-4 bg-purple-50 border border-purple-100 rounded-xl shadow-sm">
-                    <h3 class="font-bold text-purple-900 text-xs sm:text-sm">عمولات المندوبين الصافية</h3>
-                    <p id="commissions-stat" class="text-xl sm:text-2xl font-extrabold text-purple-600 mt-2">0 د.ع</p>
+                    <h3 class="font-bold text-purple-900 text-xs sm:text-sm">عناصر سلة التسوق المتاحة</h3>
+                    <p id="cart-count-stat" class="text-xl sm:text-2xl font-extrabold text-purple-600 mt-2">0 منتجات</p>
                 </div>
             </div>
 
-            <!-- الأقسام المتكاملة -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <!-- الأقسام المتكاملة الجديدة -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                <!-- 1. إدارة وإضافة المندوبين والسائقين -->
                 <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 shadow-sm">
-                    <h3 class="text-base sm:text-lg font-bold text-slate-800 mb-3 flex items-center justify-between">
-                        <span><i class="fa-solid fa-truck text-blue-600 ml-2"></i>عداد السائقين والمندوبين والقوائم</span>
-                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">إسناد مباشر</span>
+                    <h3 class="text-base font-bold text-slate-800 mb-3 flex items-center justify-between">
+                        <span><i class="fa-solid fa-users text-blue-600 ml-2"></i>إضافة السائقين والمندوبين</span>
                     </h3>
                     <div class="space-y-3 mb-4">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            <input type="text" id="driver-name" placeholder="اسم السائق / المندوب" class="w-full px-3 py-2 border rounded-lg text-xs sm:text-sm bg-white">
-                            <input type="number" id="invoice-amount" placeholder="مبلغ القائمة (د.ع)" class="w-full px-3 py-2 border rounded-lg text-xs sm:text-sm bg-white">
-                        </div>
-                        <input type="number" id="commission-rate" placeholder="عمولة المندوب (مثلاً: 5% اكتب 5)" value="5" class="w-full px-3 py-2 border rounded-lg text-xs sm:text-sm bg-white">
-                        <button onclick="addInvoice()" class="w-full py-2.5 bg-blue-600 text-white rounded-lg text-xs sm:text-sm font-bold hover:bg-blue-700 transition shadow">إضافة القائمة وحساب العمولة</button>
+                        <input type="text" id="new-staff-name" placeholder="اسم السائق أو المندوب الجديد" class="w-full px-3 py-2 border rounded-lg text-xs sm:text-sm bg-white">
+                        <select id="new-staff-role" class="w-full px-3 py-2 border rounded-lg text-xs sm:text-sm bg-white">
+                            <option value="مندوب مبيعات">مندوب مبيعات</option>
+                            <option value="سائق توزيع">سائق توزيع</option>
+                        </select>
+                        <button onclick="addStaffMember()" class="w-full py-2 bg-blue-600 text-white rounded-lg text-xs font-bold hover:bg-blue-700 transition">تسجيل وإضافة للقائمة</button>
                     </div>
-                    <div id="drivers-list-box" class="space-y-2 max-h-48 overflow-y-auto text-xs text-slate-600">
-                        <p class="text-slate-400 text-center py-4">لا توجد قوائم سائقين مضافة حالياً.</p>
+                    <div id="staff-list-box" class="space-y-2 max-h-40 overflow-y-auto text-xs text-slate-600">
+                        <p class="text-slate-400 text-center py-2">لا يوجد طاقم مسجل حالياً.</p>
                     </div>
                 </div>
 
+                <!-- 2. إضافة المنتجات والأسعار بالدينار العراقي -->
                 <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 shadow-sm">
-                    <h3 class="text-base sm:text-lg font-bold text-slate-800 mb-3 flex items-center justify-between">
-                        <span><i class="fa-solid fa-triangle-exclamation text-rose-600 ml-2"></i>إشعار الرفض والخصم التلقائي للمخزن</span>
-                        <span class="text-xs bg-rose-100 text-rose-800 px-2 py-0.5 rounded">تخصيم تلقائي</span>
+                    <h3 class="text-base font-bold text-slate-800 mb-3 flex items-center justify-between">
+                        <span><i class="fa-solid fa-box text-amber-600 ml-2"></i>إضافة المنتجات والجبس</span>
                     </h3>
                     <div class="space-y-3 mb-4">
-                        <input type="text" id="reject-reason" placeholder="سبب رفض العميل (تلف، إلغاء، زوائد)" class="w-full px-3 py-2 border rounded-lg text-xs sm:text-sm bg-white">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            <input type="number" id="reject-amount" placeholder="قيمة المبلغ المرفوض (د.ع)" class="w-full px-3 py-2 border rounded-lg text-xs sm:text-sm bg-white">
-                            <input type="number" id="reject-commission" placeholder="خصم من عمولة المندوب (د.ع)" class="w-full px-3 py-2 border rounded-lg text-xs sm:text-sm bg-white">
-                        </div>
-                        <button onclick="processRejection()" class="w-full py-2.5 bg-rose-600 text-white rounded-lg text-xs sm:text-sm font-bold hover:bg-rose-700 transition shadow">تسجيل رفض، خصم المبالغ وإرجاع المواد</button>
+                        <input type="text" id="prod-name" placeholder="اسم المنتج (مثلاً: جبس باب الآغا كبيـر)" class="w-full px-3 py-2 border rounded-lg text-xs sm:text-sm bg-white">
+                        <input type="number" id="prod-price" placeholder="السعر (د.ع)" class="w-full px-3 py-2 border rounded-lg text-xs sm:text-sm bg-white">
+                        <button onclick="addProduct()" class="w-full py-2 bg-amber-600 text-white rounded-lg text-xs font-bold hover:bg-amber-700 transition">إضافة المنتج للمخزن</button>
                     </div>
-                    <div id="reject-log-box" class="space-y-2 max-h-48 overflow-y-auto text-xs text-rose-700">
-                        <p class="text-slate-400 text-center py-4">لم يتم تسجبل أي طلب مرفوض حتى الآن.</p>
+                    <div id="products-list-box" class="space-y-2 max-h-40 overflow-y-auto text-xs text-slate-600">
+                        <p class="text-slate-400 text-center py-2">لا توجد منتجات مضافة.</p>
+                    </div>
+                </div>
+
+                <!-- 3. سلة التسوق وإنشاء القوائم والفواتير -->
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 shadow-sm">
+                    <h3 class="text-base font-bold text-slate-800 mb-3 flex items-center justify-between">
+                        <span><i class="fa-solid fa-cart-shopping text-emerald-600 ml-2"></i>سلة التسوق وإصدار القوائم</span>
+                    </h3>
+                    <div class="space-y-2 mb-3">
+                        <select id="cart-staff-select" class="w-full px-2 py-1.5 border rounded text-xs bg-white">
+                            <option value="">اختر المندوب / السائق المسند له</option>
+                        </select>
+                        <select id="cart-prod-select" class="w-full px-2 py-1.5 border rounded text-xs bg-white">
+                            <option value="">اختر المنتج المتاح</option>
+                        </select>
+                        <input type="number" id="cart-qty" placeholder="الكمية (كرتون/شدات)" value="1" min="1" class="w-full px-2 py-1.5 border rounded text-xs bg-white">
+                        <button onclick="addToCart()" class="w-full py-2 bg-emerald-600 text-white rounded-lg text-xs font-bold hover:bg-emerald-700 transition">إضافة للسلة وإصدار الفاتورة</button>
+                    </div>
+                    <div id="cart-items-box" class="space-y-1 max-h-32 overflow-y-auto text-xs text-slate-600 border-t pt-2">
+                        <p class="text-slate-400 text-center">السلة فارغة.</p>
                     </div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- الأقسام السابقة المدمجة: رفض الاستلام، تتبع GPS، وبطاقة الهوية -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- معالجة رفض التسليم والخصم التلقائي -->
                 <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 shadow-sm">
-                    <h3 class="text-base sm:text-lg font-bold text-slate-800 mb-3 flex items-center justify-between">
-                        <span><i class="fa-solid fa-map-location-dot text-emerald-600 ml-2"></i>خريطة GPS التفاعلية (للمدير حصراً)</span>
-                        <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">🟢 نشط فقط</span>
-                    </h3>
-                    <p class="text-xs text-slate-500 mb-3">يعرض أماكن وحركة المندوبين والسائقين في الموصل عند توفر حالة (نشط الآن).</p>
-                    <div id="map-simulation" class="bg-slate-900 text-white h-40 rounded-xl p-4 flex flex-col justify-between shadow-inner">
-                        <div class="flex justify-between items-center text-xs">
-                            <span class="text-emerald-400 font-bold"><i class="fa-solid fa-satellite-dish ml-1"></i>تتبع موقع الموصل المباشر</span>
-                            <span class="bg-slate-800 px-2 py-1 rounded border border-slate-700 text-slate-300">الصلاحية: مدير النظام فقط</span>
-                        </div>
-                        <div id="active-drivers-gps" class="text-xs text-slate-300 space-y-1">
-                            <div class="flex justify-between items-center bg-slate-800/80 p-2 rounded border border-slate-700">
-                                <span>🚚 السائق (أبو فهد - حي الزهور): <strong class="text-emerald-400">🟢 نشط (متصل)</strong></span>
-                                <span class="text-slate-400">إحداثيات GPS مباشرة</span>
-                            </div>
+                    <h3 class="text-base font-bold text-slate-800 mb-3"><i class="fa-solid fa-triangle-exclamation text-rose-600 ml-2"></i>إشعار الرفض والخصم التلقائي</h3>
+                    <div class="space-y-3 mb-3">
+                        <input type="text" id="reject-reason" placeholder="سبب الرفض (تلف، إلغاء)" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
+                        <input type="number" id="reject-amount" placeholder="مبلغ الفاتورة المرفوضة (د.ع)" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
+                        <button onclick="processRejection()" class="w-full py-2 bg-rose-600 text-white rounded-lg text-xs font-bold hover:bg-rose-700 transition">تسجيل رفض وخصم تلقائي للمخزن</button>
+                    </div>
+                    <div id="reject-log-box" class="space-y-1 max-h-32 overflow-y-auto text-xs text-rose-700">
+                        <p class="text-slate-400 text-center">لا توجد حالات رفض مسجلة.</p>
+                    </div>
+                </div>
+
+                <!-- تتبع GPS للمدير حصراً -->
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 shadow-sm">
+                    <h3 class="text-base font-bold text-slate-800 mb-3"><i class="fa-solid fa-map-location-dot text-emerald-600 ml-2"></i>خريطة GPS (للمدير وعند الاتصال فقط)</h3>
+                    <p class="text-xs text-slate-500 mb-2">تتبع المندوبين والسائقين النشطين (🟢 متصل).</p>
+                    <div class="bg-slate-900 text-white h-32 rounded-xl p-3 flex flex-col justify-between text-xs">
+                        <span class="text-emerald-400 font-bold">🗺️ خريطة الموصل النشطة</span>
+                        <div class="bg-slate-800 p-2 rounded border border-slate-700 flex justify-between">
+                            <span>حالة الاتصال:</span>
+                            <strong class="text-emerald-400">🟢 متصل الآن (المدير فقط)</strong>
                         </div>
                     </div>
                 </div>
 
+                <!-- إدارة بطاقة الهوية والتصميم -->
                 <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 shadow-sm">
-                    <h3 class="text-base sm:text-lg font-bold text-slate-800 mb-3 flex items-center justify-between">
-                        <span><i class="fa-solid fa-id-card text-indigo-600 ml-2"></i>بطاقة هوية وبيانات النظام (تعديل المدير)</span>
-                        <span class="text-xs bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded">قابل للتعديل</span>
-                    </h3>
-                    <div class="space-y-3 text-xs">
-                        <div>
-                            <label class="text-slate-600 font-semibold mb-1 block">اسم المعمل / الشركة:</label>
-                            <input type="text" id="edit-comp-name" value="جبس باب الآغا - الموصل" class="w-full px-3 py-2 border rounded-lg bg-white">
+                    <h3 class="text-base font-bold text-slate-800 mb-3"><i class="fa-solid fa-id-card text-indigo-600 ml-2"></i>بطاقة الهوية (تحكم المدير)</h3>
+                    <div class="space-y-2 text-xs">
+                        <input type="text" id="edit-comp-name" value="جبس باب الآغا - الموصل" class="w-full px-2 py-1.5 border rounded bg-white">
+                        <div class="grid grid-cols-2 gap-2">
+                            <input type="text" id="edit-owner-name" value="المدير العام" class="w-full px-2 py-1.5 border rounded bg-white">
+                            <input type="text" id="edit-comp-phone" value="07700000000" class="w-full px-2 py-1.5 border rounded bg-white">
                         </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            <div>
-                                <label class="text-slate-600 font-semibold mb-1 block">مالك الشركة:</label>
-                                <input type="text" id="edit-owner-name" value="المدير العام" class="w-full px-3 py-2 border rounded-lg bg-white">
-                            </div>
-                            <div>
-                                <label class="text-slate-600 font-semibold mb-1 block">رقم الهاتف الرسمي:</label>
-                                <input type="text" id="edit-comp-phone" value="07700000000" class="w-full px-3 py-2 border rounded-lg bg-white">
-                            </div>
-                        </div>
-                        <button onclick="saveIdentityCard()" class="w-full py-2.5 bg-indigo-600 text-white rounded-lg text-xs font-bold hover:bg-indigo-700 transition shadow">حفظ وتحديث البطاقة للجميع</button>
+                        <button onclick="saveIdentityCard()" class="w-full py-2 bg-indigo-600 text-white rounded-lg text-xs font-bold hover:bg-indigo-700 transition">تحديث وحفظ الهوية</button>
                     </div>
                 </div>
             </div>
@@ -155,7 +169,13 @@
     </div>
 
     <script>
-        let state = { totalSales: 0, totalCommissions: 0, invoices: [], rejections: [] };
+        let state = {
+            totalSales: 0,
+            staff: [],
+            products: [],
+            cart: [],
+            rejections: []
+        };
 
         function handleLogin(e) {
             e.preventDefault();
@@ -169,40 +189,63 @@
                 setTimeout(() => {
                     document.getElementById('login-screen').classList.add('hidden');
                     document.getElementById('dashboard-screen').classList.remove('hidden');
-                }, 600);
+                }, 500);
             } else {
                 err.classList.remove('hidden');
                 err.innerText = "خطأ في اسم المستخدم أو كلمة المرور (استخدم admin123).";
             }
         }
 
-        function addInvoice() {
-            const name = document.getElementById('driver-name').value.trim();
-            const amt = parseFloat(document.getElementById('invoice-amount').value);
-            const commRate = parseFloat(document.getElementById('commission-rate').value) || 0;
-            if(!name || isNaN(amt) || amt <= 0) { alert('يرجى إدخال اسم السائق ومبلغ القائمة بدقة.'); return; }
-            const commAmt = (amt * commRate) / 100;
-            state.invoices.push({ name, amt, commAmt });
-            state.totalSales += amt;
-            state.totalCommissions += commAmt;
-            document.getElementById('driver-name').value = '';
-            document.getElementById('invoice-amount').value = '';
+        function addStaffMember() {
+            const name = document.getElementById('new-staff-name').value.trim();
+            const role = document.getElementById('new-staff-role').value;
+            if(!name) { alert('يرجى إدخال اسم السائق أو المندوب.'); return; }
+            state.staff.push({ name, role });
+            document.getElementById('new-staff-name').value = '';
             updateUI();
+            alert('✅ تم إضافة المندوب/السائق بنجاح!');
+        }
+
+        function addProduct() {
+            const name = document.getElementById('prod-name').value.trim();
+            const price = parseFloat(document.getElementById('prod-price').value);
+            if(!name || isNaN(price) || price <= 0) { alert('يرجى إدخال اسم المنتج والسعر الصحيح بالدينار العراقي.'); return; }
+            state.products.push({ name, price });
+            document.getElementById('prod-name').value = '';
+            document.getElementById('prod-price').value = '';
+            updateUI();
+            alert('✅ تم إضافة المنتج للمخزن بنجاح!');
+        }
+
+        function addToCart() {
+            const staffName = document.getElementById('cart-staff-select').value;
+            const prodIdx = document.getElementById('cart-prod-select').value;
+            const qty = parseInt(document.getElementById('cart-qty').value) || 1;
+
+            if(!staffName || prodIdx === "" || qty <= 0) {
+                alert('يرجى اختيار المندوب، المنتج، وتحديد الكمية بشكل صحيح.');
+                return;
+            }
+
+            const prod = state.products[prodIdx];
+            const total = prod.price * qty;
+
+            state.cart.push({ staffName, prodName: prod.name, qty, total });
+            state.totalSales += total;
+            updateUI();
+            alert('🛒 تم إضافة المنتجات للسلة وإصدار الفاتورة وإسنادها بنجاح!');
         }
 
         function processRejection() {
             const reason = document.getElementById('reject-reason').value.trim();
             const amt = parseFloat(document.getElementById('reject-amount').value);
-            const commDeduct = parseFloat(document.getElementById('reject-commission').value) || 0;
             if(!reason || isNaN(amt) || amt <= 0) { alert('يرجى إدخال سبب الرفض ومبلغ الفاتورة.'); return; }
-            state.rejections.push({ reason, amt, commDeduct });
+            state.rejections.push({ reason, amt });
             state.totalSales = Math.max(0, state.totalSales - amt);
-            state.totalCommissions = Math.max(0, state.totalCommissions - commDeduct);
             document.getElementById('reject-reason').value = '';
             document.getElementById('reject-amount').value = '';
-            document.getElementById('reject-commission').value = '';
             updateUI();
-            alert('🚨 تنبيه فوري: تم إرسال الإشعار، إرجاع المواد للمخزن، والخصم التلقائي بنجاح!');
+            alert('🚨 تنبيه فوري: تم تسجيل الرفض، إرجاع المواد للمخزن، والخصم التلقائي بنجاح!');
         }
 
         function saveIdentityCard() {
@@ -212,39 +255,53 @@
             document.getElementById('disp-company-name').innerText = cName;
             document.getElementById('disp-owner-name').innerText = oName;
             document.getElementById('disp-company-phone').innerText = cPhone;
-            alert('✅ تم حفظ وتحديث بطاقة هوية النظام بنجاح!');
+            alert('✅ تم تحديث بطاقة الهوية بنجاح!');
         }
 
         function updateUI() {
             document.getElementById('total-sales-stat').innerText = state.totalSales.toLocaleString() + ' د.ع';
-            document.getElementById('drivers-stat').innerText = state.invoices.length + ' قوائم';
+            document.getElementById('staff-stat').innerText = state.staff.length + ' أشخاص';
             document.getElementById('rejects-stat').innerText = state.rejections.length + ' طلبات';
-            document.getElementById('commissions-stat').innerText = state.totalCommissions.toLocaleString() + ' د.ع';
+            document.getElementById('cart-count-stat').innerText = state.cart.length + ' فواتير';
 
-            const dBox = document.getElementById('drivers-list-box');
-            if(state.invoices.length > 0) {
-                dBox.innerHTML = state.invoices.map((inv, idx) => `
-                    <div class="p-2 bg-white rounded-lg border flex justify-between items-center shadow-sm">
-                        <span>قائمة #${idx+1} - السائق: <strong>${inv.name}</strong></span>
-                        <div class="text-left">
-                            <span class="text-blue-600 font-bold block">${inv.amt.toLocaleString()} د.ع</span>
-                            <span class="text-slate-400 text-[10px]">العمولة: ${inv.commAmt.toLocaleString()} د.ع</span>
-                        </div>
-                    </div>
-                `).join('');
+            // قوائم طاقم العمل
+            const staffBox = document.getElementById('staff-list-box');
+            const staffSelect = document.getElementById('cart-staff-select');
+            staffSelect.innerHTML = '<option value="">اختر المندوب / السائق المسند له</option>';
+            if(state.staff.length > 0) {
+                staffBox.innerHTML = state.staff.map(s => `<div class="p-1.5 bg-white rounded border flex justify-between"><span>${s.name}</span><strong class="text-blue-600">${s.role}</strong></div>`).join('');
+                state.staff.forEach(s => {
+                    staffSelect.innerHTML += `<option value="${s.name}">${s.name} (${s.role})</option>`;
+                });
+            } else {
+                staffBox.innerHTML = '<p class="text-slate-400 text-center py-2">لا يوجد طاقم مسجل حالياً.</p>';
             }
 
-            const rBox = document.getElementById('reject-log-box');
+            // قائمة المنتجات
+            const prodBox = document.getElementById('products-list-box');
+            const prodSelect = document.getElementById('cart-prod-select');
+            prodSelect.innerHTML = '<option value="">اختر المنتج المتاح</option>';
+            if(state.products.length > 0) {
+                prodBox.innerHTML = state.products.map(pr => `<div class="p-1.5 bg-white rounded border flex justify-between"><span>${pr.name}</span><strong class="text-amber-600">${pr.price.toLocaleString()} د.ع</strong></div>`).join('');
+                state.products.forEach((pr, idx) => {
+                    prodSelect.innerHTML += `<option value="${idx}">${pr.name} - ${pr.price.toLocaleString()} د.ع</option>`;
+                });
+            } else {
+                prodBox.innerHTML = '<p class="text-slate-400 text-center py-2">لا توجد منتجات مضافة.</p>';
+            }
+
+            // سلة التسوق
+            const cartBox = document.getElementById('cart-items-box');
+            if(state.cart.length > 0) {
+                cartBox.innerHTML = state.cart.map(c => `<div class="p-1.5 bg-white rounded border flex justify-between text-[11px]"><span>${c.staffName}: ${c.prodName} (${c.qty})</span><strong class="text-emerald-600">${c.total.toLocaleString()} د.ع</strong></div>`).join('');
+            } else {
+                cartBox.innerHTML = '<p class="text-slate-400 text-center">السلة فارغة.</p>';
+            }
+
+            // المرفوضات
+            const rejBox = document.getElementById('reject-log-box');
             if(state.rejections.length > 0) {
-                rBox.innerHTML = state.rejections.map(rej => `
-                    <div class="p-2 bg-white rounded-lg border border-rose-200 flex justify-between items-center shadow-sm">
-                        <span>مرفوض: <strong>${rej.reason}</strong></span>
-                        <div class="text-left">
-                            <span class="text-rose-600 font-bold block">-${rej.amt.toLocaleString()} د.ع</span>
-                            <span class="text-rose-400 text-[10px]">خصم عمولة: -${rej.commDeduct.toLocaleString()} د.ع</span>
-                        </div>
-                    </div>
-                `).join('');
+                rejBox.innerHTML = state.rejections.map(r => `<div class="p-1 bg-white rounded border border-rose-200 flex justify-between"><span>رفض: ${r.reason}</span><strong class="text-rose-600">-${r.amt.toLocaleString()} د.ع</strong></div>`).join('');
             }
         }
     </script>
